@@ -199,6 +199,13 @@
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
+            <el-form-item label="数据加密">
+              <el-switch v-model="temp.encryptStatus" :active-value="1" :inactive-value="0" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
             <el-form-item label="子任务">
               <el-select v-model="temp.childJobId" multiple placeholder="子任务" value-key="id">
                 <el-option v-for="item in jobIdList" :key="item.id" :label="item.jobDesc" :value="item" />
