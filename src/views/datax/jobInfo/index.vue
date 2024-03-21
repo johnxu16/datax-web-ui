@@ -303,7 +303,7 @@
           </el-col>
         </el-row>
       </el-form>
-      <json-editor v-if="temp.glueType==='BEAN'" ref="jsonEditor" v-model="jobJson" />
+      <json-editor v-if="temp.glueType==='BEAN' || temp.glueType==='DUBBO'" ref="jsonEditor" v-model="jobJson" />
       <shell-editor v-if="temp.glueType==='GLUE_SHELL'" ref="shellEditor" v-model="glueSource" />
       <python-editor v-if="temp.glueType==='GLUE_PYTHON'" ref="pythonEditor" v-model="glueSource" />
       <powershell-editor v-if="temp.glueType==='GLUE_POWERSHELL'" ref="powershellEditor" v-model="glueSource" />
@@ -464,7 +464,8 @@ export default {
         { value: 'BEAN', label: 'DataX任务' },
         { value: 'GLUE_SHELL', label: 'Shell任务' },
         { value: 'GLUE_PYTHON', label: 'Python任务' },
-        { value: 'GLUE_POWERSHELL', label: 'PowerShell任务' }
+        { value: 'GLUE_POWERSHELL', label: 'PowerShell任务' },
+        { value: 'DUBBO', label: 'Dubbo任务' }
       ],
       incrementTypes: [
         { value: 0, label: '无' },
@@ -582,7 +583,9 @@ export default {
           }
           this.temp.jobJson = this.jobJson
           this.temp.glueSource = this.glueSource
-          this.temp.executorHandler = this.temp.glueType === 'BEAN' ? 'executorJobHandler' : ''
+          this.temp.executorHandler = this.temp.glueType === 'BEAN'
+            ? 'executorJobHandler' : this.temp.glueType === 'DUBBO'
+              ? 'dubboJobHandler' : ''
           if (this.partitionField) this.temp.partitionInfo = this.partitionField + ',' + this.timeOffset + ',' + this.timeFormatType
           job.createJob(this.temp).then(() => {
             this.fetchData()
@@ -656,7 +659,9 @@ export default {
             }
             this.temp.childJobId = auth.toString()
           }
-          this.temp.executorHandler = this.temp.glueType === 'BEAN' ? 'executorJobHandler' : ''
+          this.temp.executorHandler = this.temp.glueType === 'BEAN'
+            ? 'executorJobHandler' : this.temp.glueType === 'DUBBO'
+              ? 'dubboJobHandler' : ''
           this.temp.glueSource = this.glueSource
           if (this.partitionField) this.temp.partitionInfo = this.partitionField + ',' + this.timeOffset + ',' + this.timeFormatType
           job.updateJob(this.temp).then(() => {
